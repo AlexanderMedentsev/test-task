@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use classes\DTO;
+use classes\Handler;
+
+$context = new DTO();
+$hand = new Handler();
+$context->firstNumber = rand(0, 1000);
+$context->secondNumber = rand(0, 1000);
+$hand->handle($context);
+
+if (empty($context->logAccept)) {
+    echo("Последовательность для чисел {$context->firstNumber} и {$context->secondNumber} не найдена.");
+}
+
+if (!empty($context->logAccept)) {
+    echo("\e[92mНайдена удачная комбинация:\e[0m" . PHP_EOL);
+    echo('Число 1 — ' . $context->firstNumber . PHP_EOL);
+    echo('Число 2 — ' . $context->secondNumber . PHP_EOL);
+    echo("\e[92mПоследовательность действий:\e[0m" . PHP_EOL);
+    foreach ($context->logAccept as $action) {
+        echo("\e[93m{$action[1]}\e[0m ");
+    }
+    echo(PHP_EOL . "\e[96mВыполнено итераций {$context->countIterations}\e[0m" . PHP_EOL);
+    echo('Лог выполнения:' . PHP_EOL);
+
+    foreach ($context->logAccept as $value) {
+        echo("Текущий результат {$value[0]}" . PHP_EOL . "Выполнено действие: {$value[1]}. Результат {$value[2]}" . PHP_EOL);
+    }
+    echo("\e[91mНеудачные комбинации:\e[0m");
+    foreach ($context->logAttempts as $array) {
+        echo(PHP_EOL);
+        foreach ($array as $value) {
+            echo("\e[91m$value\e[0m ");
+        }
+    }
+}
+
+
+
+
